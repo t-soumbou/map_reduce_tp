@@ -1,0 +1,49 @@
+#####Map Reduce #######
+
+#Prenons l'exemple d'une matrice de données à faire pivoter. C'est à dire 
+#que les ligne deviennent des colonnes et vice versa. Soit l'exemple suivat:
+#        Personne |   Film    | Note
+#        ---------------------------
+#        Serge    |  Pierlo   |   5
+#        Serge    |  Manhattan|   5
+#        Serge    |  Campus   |   1
+#Avec le pivot la matrice ci-dessus devient:
+
+#            |---------------------------
+# Personne   |Serge    |  Serge    |   Serge
+# Film       |Pierlo   |  Manhattan|  Campus
+# Note       |5        |  5        |   1
+
+##On crée une matrice vide de caractéristiques inversées que le matrice d'entrée
+M_vide = matrix(ncol(M), nrow(M))
+
+##Puis on attribut à chaque valeur du tableau une clé qui correspond à sa positin dans la matrice
+For i in nrow(M)#M est la matrice
+	j in ncol(M) # i et j les indices de celle-ci
+		key <- (i,j)
+		val<- M[i,j]
+
+##Dans la partie 'map' on regroupe les valeurs en fonction du deuxième composant de la première clé
+##On aura donc en sortie une liste de couple (clé, valeur). Il s'agit ici d'une deuxième clé qui est 
+##représentée par le 1e constituant de la première clé. Il s'agit du numéro de ligne 		
+Map(key,val)
+	k in ncol(M)
+	Map_k <- List('val') where key.j == key
+	key2=key.i
+	return(List('val', key2))
+
+
+##Le reduce range chacune des listes (ou groupes) de données obtenues selon l'ordre croissant des nouvelles
+##clés, key2. Puis affecte aux lignes de M_vide les contenues de ces listes ou vecteurs désormais trié	
+Reduce(list)
+	Od_i=order(list, key2) #range les listes selon l'ordre croissant des key2 
+	#et renvoie une liste ou un vecteur de valeurs rangées selon l'ordre croissant de la 2e clé 'key2'
+	For i in ncol(M)
+		M_vide[i, ] <- Od_i
+		
+MapReduce(Map, Reduce)
+	
+	
+	
+		
+		
